@@ -49,8 +49,8 @@ public class Utils {
 		int temp = number;
 		byte[] b = new byte[2];
 		for (int i = 0; i < b.length; i++) {
-			b[i] = new Integer(temp & 0xff).byteValue();// 将最低位保存在最低位
-			temp = temp >> 8; // 向右移8位
+			b[i] = new Integer(temp & 0xff).byteValue();
+			temp = temp >> 8;
 		}
 		return b;
 	}
@@ -76,7 +76,7 @@ public class Utils {
 		return stringBuilder.toString();
 	}
 
-	//byte数组转换为二进制字符串,每个字节以","隔开
+
 	public static String bytesToBinaryString(byte[] src) {
 		StringBuffer result = new StringBuffer();
 		for (int i = 0; i < src.length; i++) {
@@ -183,13 +183,7 @@ public class Utils {
 		}
 	}
 
-	/**
-	 * 读取C语言中的uleb类型 目的是解决整型数值浪费问题 长度不固定，在1~5个字节中浮动
-	 *
-	 * @param srcByte
-	 * @param offset
-	 * @return
-	 */
+
 	public static byte[] readUnsignedLeb128(byte[] srcByte, int offset) {
 		List<Byte> byteAryList = new ArrayList<Byte>();
 		byte bytes = Utils.copyByte(srcByte, offset, 1)[0];
@@ -209,12 +203,7 @@ public class Utils {
 		return byteAry;
 	}
 
-	/**
-	 * 解码leb128数据 每个字节去除最高位，然后进行拼接，重新构造一个int类型数值，从低位开始
-	 *
-	 * @param byteAry2
-	 * @return
-	 */
+
 	public static int decodeUleb128(byte[] byteAry2) {
 
 		short[] byteAry = byte2short(byteAry2);
@@ -271,47 +260,33 @@ public class Utils {
 		return source_byte;
 	}
 
-	/**
-	 * 修改dex头 sha1值
-	 *
-	 * @param dexBytes
-	 * @throws NoSuchAlgorithmException
-	 */
+
 	public static void updateSHA1Header(byte[] dexBytes)
 			throws NoSuchAlgorithmException {
 		MessageDigest md = MessageDigest.getInstance("SHA-1");
-		md.update(dexBytes, 32, dexBytes.length - 32);// 从32到结束计算sha-1
+		md.update(dexBytes, 32, dexBytes.length - 32);
 		byte[] newdt = md.digest();
-		System.arraycopy(newdt, 0, dexBytes, 12, 20);// 修改sha-1值（12-31）
+		System.arraycopy(newdt, 0, dexBytes, 12, 20);
 	}
 
-	/**
-	 * 修改dex头 file_size值
-	 *
-	 * @param dexBytes
-	 */
+
 	public static void updateFileSizeHeader(byte[] dexBytes) {
-		// 新文件长度
+
 		byte[] newfs = intToByte(dexBytes.length);
 
-		// 高位低位交换
 		for (int i = 0; i < 2; i++) {
 			byte tmp = newfs[i];
 			newfs[i] = newfs[newfs.length - 1 - i];
 			newfs[newfs.length - 1 - i] = tmp;
 
 		}
-		System.arraycopy(newfs, 0, dexBytes, 32, 4);// 修改（32-35）
+		System.arraycopy(newfs, 0, dexBytes, 32, 4);
 	}
 
-	/**
-	 * 修改dex头，CheckSum 校验码
-	 *
-	 * @param dexBytes
-	 */
+
 	public static void updateCheckSumHeader(byte[] dexBytes) {
 		Adler32 adler = new Adler32();
-		adler.update(dexBytes, 12, dexBytes.length - 12);// 从12到文件末尾计算校验码
+		adler.update(dexBytes, 12, dexBytes.length - 12);
 		long value = adler.getValue();
 		int va = (int) value;
 		byte[] newcs = intToByte(va);
@@ -322,16 +297,11 @@ public class Utils {
 			newcs[newcs.length - 1 - i] = tmp;
 		}
 
-		System.arraycopy(newcs, 0, dexBytes, 8, 4);// 效验码赋值（8-11）
+		System.arraycopy(newcs, 0, dexBytes, 8, 4);
 
 	}
 
-	/**
-	 * int 转byte[]
-	 *
-	 * @param number
-	 * @return
-	 */
+
 	public static byte[] intToByte(int number) {
 		byte[] b = new byte[4];
 		for (int i = 3; i >= 0; i--) {

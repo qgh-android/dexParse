@@ -9,7 +9,7 @@ import java.util.List;
 
 public class ParseDexMain {
 
-    private static String dexpath = "C:\\Users\\qinguanghui\\Desktop\\dex\\classes.dex";
+    private static String dexpath = "C:\\Users\\xxx\\Desktop\\dex\\classes.dex";
 
     public static void main(String[] args) {
 
